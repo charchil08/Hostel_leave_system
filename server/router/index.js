@@ -3,4 +3,5 @@ const auth = require("./auth.router")
 
 router.use("/auth", auth);
 
+
 module.exports = router;
