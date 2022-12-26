@@ -53,6 +53,34 @@ class AuthService {
         }
     }
 
+    async login(mail, password, next) {
+        if (!validateUser(mail, password)) {
+            return next(new ErrorHandler(401, "Input validation error"))
+        }
+
+        const warden = await getWardenByMailDb(mail);
+
+        if (!warden) {
+            return next(new ErrorHandler(403, "Email or password are incorrect"))
+        }
+
+        const isCorrectPassword = await bcrypt.compare(password, warden.password)
+
+        if (!isCorrectPassword) {
+            return next(403, "Email or password are incorrect");
+        }
+
+        const authToken = await this.signToken({
+            id: warden.id,
+            mail: warden.mail
+        })
+
+        return {
+            authToken,
+            warden
+        }
+    }
+
     async signToken(data) {
         try {
             return jwt.sign(data, process.env.SECRET, { expiresIn: process.env.SECRET_TIME })
