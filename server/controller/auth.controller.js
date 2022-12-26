@@ -41,7 +41,21 @@ const loginWarden = async (req, res, next) => {
     })
 }
 
+const logoutWarden = async () => {
+    res.cookie("auth-token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+    });
+
+    res.status(200).json({
+        success: true,
+        message: "Logged Out",
+    });
+
+}
+
 module.exports = {
     createAccountWarden,
     loginWarden,
+    logoutWarden,
 }
