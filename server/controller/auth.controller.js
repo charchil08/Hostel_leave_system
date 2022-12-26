@@ -9,7 +9,7 @@ const createAccountWarden = async (req, res, next) => {
         return;
     }
     const { authToken, newWarden } = await resp;
-    res.cookie("auth-token", authToken, {
+    res.cookie("authToken", authToken, {
         httpOnly: true,
         sameSite: process.env.NODE_ENV === "development" ? true : "none",
         secure: process.env.NODE_ENV === "development" ? false : true,
@@ -30,7 +30,7 @@ const loginWarden = async (req, res, next) => {
 
     const { authToken, warden } = await resp;
 
-    res.cookie("auth-token", authToken, {
+    res.cookie("authToken", authToken, {
         httpOnly: true,
         sameSite: process.env.NODE_ENV === "development" ? true : "none",
         secure: process.env.NODE_ENV === "development" ? false : true,
@@ -41,8 +41,8 @@ const loginWarden = async (req, res, next) => {
     })
 }
 
-const logoutWarden = async () => {
-    res.cookie("auth-token", null, {
+const logoutWarden = async (req, res) => {
+    res.cookie("authToken", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
     });

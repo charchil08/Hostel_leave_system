@@ -12,7 +12,7 @@ const handleError = (err, req, res, next) => {
         status: "error",
         statusCode: statusCode || 500,
         message: statusCode === 500 ? "An error occured" : message,
-        // error: err.stack
+        error: err.stack
     })
     next();
 };

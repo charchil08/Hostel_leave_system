@@ -35,7 +35,8 @@ class AuthService {
 
                 const authToken = await this.signToken({
                     id: newWarden.id,
-                    mail: newWarden.mail
+                    mail: newWarden.mail,
+                    role: newWarden.role,
                 })
 
                 return {
@@ -72,7 +73,8 @@ class AuthService {
 
         const authToken = await this.signToken({
             id: warden.id,
-            mail: warden.mail
+            mail: warden.mail,
+            role: warden.role,
         })
 
         return {

@@ -136,3 +136,22 @@ CREATE TABLE public.leave
         NOT VALID,
     CONSTRAINT chk_from_date CHECK (from_date > to_date AND from_date > CURRENT_DATE) NOT VALID
 );
+
+
+-- Functions
+
+-- Create Bundle of room (void)
+CREATE OR REPLACE FUNCTION fn_create_bundle_rooms(warden_id int, from_number int, to_number int)
+RETURNS VOID AS
+$body$
+DECLARE
+    i int DEFAULT from_number;
+BEGIN
+    LOOP
+        INSERT INTO public.room(room_number, warden_id) VALUES(i, warden_id);
+        i := i+1;
+        EXIT WHEN i > to_number;
+    END LOOP;
+END
+$body$
+LANGUAGE plpgsql;
