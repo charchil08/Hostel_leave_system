@@ -3,6 +3,9 @@ const { ErrorHandler } = require("../middleware/error");
 const bcrypt = require("bcrypt")
 const { getHostellerByMailDb, getHostellerByContactDb, createHostellerDb } = require("../db/hosteller.db");
 const authService = require("./auth.service");
+const pool = require("../config");
+const { createGuardianDb } = require("../db/guardian.db");
+const { createRoommateDb } = require("../db/roomate.db");
 
 class HostellerService {
     async signUpHosteller(hosteller, next) {
@@ -43,6 +46,15 @@ class HostellerService {
 
             const newHosteller = await createHostellerDb(name, hashedPassword, enrollment_number, contact_no, mail, gender, address, admission_date, expire_date, semester, room_id, warden_id);
 
+            // Add gurdian
+            let guardian_ids = [];
+            for (let i = 0; i < guardian.length; i++) {
+                guardian_ids[i] = await createGuardianDb(guardian[i].name, guardian[i].contact_no, guardian[i].mail, guardian[i].relation, newHosteller.id);
+            }
+
+            // add new roommate column
+            const newRoommateId = await createRoommateDb(room_id, newHosteller.id);
+
             const authToken = await authService.signToken({
                 id: newHosteller.id,
                 mail: newHosteller.role,
@@ -51,7 +63,8 @@ class HostellerService {
 
             return {
                 authToken,
-                newHosteller
+                newHosteller,
+                guardian_ids,
             }
         }
         catch (error) {
@@ -77,7 +90,7 @@ class HostellerService {
                 return next(403, "Email or password are incorrect");
             }
 
-            const authToken = await this.signToken({
+            const authToken = await authService.signToken({
                 id: hosteller.id,
                 mail: hosteller.mail,
                 role: hosteller.role,

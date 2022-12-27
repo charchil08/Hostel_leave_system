@@ -1,9 +1,10 @@
-const { createAccountHosteller } = require("../controller/hosteller.controller");
+const { createAccountHosteller, loginHosteller, logoutHosteller, createBundleAccountHosteller } = require("../controller/hosteller.controller");
 
 const router = require("express").Router();
 
 router.post("/signup", createAccountHosteller);
-router.post("/signin",);
-// router.get("/signout", logoutWarden);
+router.post("/signin", loginHosteller);
+router.get("/signout", logoutHosteller);
+
 
 module.exports = router;
