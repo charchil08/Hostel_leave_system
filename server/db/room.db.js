@@ -20,7 +20,13 @@ const deleteRoomDb = async (room_number, next) => {
     }
 }
 
+const getRoomIdByNumber = async (room_number) => {
+    const { rows } = await pool.query("SELECT id from public.room WHERE room_number = $1", [room_number]);
+    return rows[0].id;
+}
+
 module.exports = {
     createRoomDb,
-    deleteRoomDb
+    deleteRoomDb,
+    getRoomIdByNumber,
 }

@@ -44,7 +44,7 @@ CREATE TABLE public.hosteller
     enrollment_number character varying(20) NOT NULL,
     contact_no character varying(10) NOT NULL,
     mail character varying(100) NOT NULL,
-    gender character(1) DEFAULT 'G',
+    gender character(1) DEFAULT 'F',
     address character varying(255) NOT NULL,
     role character varying(10) NOT NULL DEFAULT 'hosteller',
     admission_date date NOT NULL,
@@ -155,3 +155,39 @@ BEGIN
 END
 $body$
 LANGUAGE plpgsql;
+
+
+-- Insertions
+
+-- hosteller
+
+-- json data
+-- {
+--     "name": "Felisha Martijn",
+--     "password": "lGpzPr4mD",
+--     "enrollment_number": "190210116001",
+--     "contact_no": "8621734769",
+--     "mail": "fmartijn0@de.vu",
+--     "gender": "M",
+--     "address": "12641 Graceland Plaza",
+--     "role": "hosteller",
+--     "admission_date": "2022/10/08",
+--     "expire_date": "2023/10/08",
+--     "semester": 5,
+--     "room_id": 23,
+--     "warden_id": 5,
+--     "guardian": [
+--         {
+--             "name": "Cassandre Jozwiak",
+--             "contact_no": "8946321903",
+--             "mail": "cjozwiak0@elpais.com",
+--             "relation": "father"
+--         },
+--         {
+--             "name": "Vinny Keer",
+--             "contact_no": "9228816166",
+--             "mail": "vkeer1@angelfire.com",
+--             "relation": "mother"
+--         }
+--     ]
+-- }

@@ -7,7 +7,6 @@ const createWardenDb = async ({ name, contact_no, mail, password }) => {
     );
 
     return rows[0];
-
 }
 
 const getWardenByMailDb = async (mail) => {
@@ -26,10 +25,14 @@ const getWardenByContactNoDb = async (contact_no) => {
     return rows[0];
 }
 
-
+const getWardenIdByName = async (wardenId) => {
+    const { rows } = await pool.query("SELECT id FROM public.warden WHERE id = $1", [wardenId]);
+    return rows[0].id;
+}
 
 module.exports = {
     getWardenByMailDb,
     getWardenByContactNoDb,
-    createWardenDb
+    createWardenDb,
+    getWardenIdByName,
 }

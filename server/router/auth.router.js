@@ -2,8 +2,8 @@ const { createAccountWarden, loginWarden, logoutWarden } = require("../controlle
 
 const router = require("express").Router();
 
-router.post("/signup", createAccountWarden)
-router.post("/signin", loginWarden)
+router.post("/signup", createAccountWarden);
+router.post("/signin", loginWarden);
 router.get("/signout", logoutWarden);
 
 module.exports = router;
