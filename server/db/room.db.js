@@ -12,7 +12,7 @@ const createRoomDb = async (room_number, warden_id, next) => {
 
 const deleteRoomDb = async (room_number, next) => {
     try {
-        const { rows } = await pool.query("DELETE FROM public.room WHERE room_number=$1 RETURNING room_number", [room_number]);
+        const { rows } = await pool.query("DELETE FROM public.room WHERE id=$1 RETURNING room_number", [room_number]);
         return rows[0];
     }
     catch (err) {

@@ -134,9 +134,27 @@ CREATE TABLE public.leave
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
-    CONSTRAINT chk_from_date CHECK (from_date > to_date AND from_date > CURRENT_DATE) NOT VALID
+    CONSTRAINT chk_from_date CHECK (from_date < to_date AND from_date > CURRENT_DATE) NOT VALID
 );
 
+-- updation in tables
+
+-- roommate
+ALTER TABLE IF EXISTS public.leave
+    ADD COLUMN roommate_id integer NOT NULL;
+
+ALTER TABLE IF EXISTS public.leave
+    ADD COLUMN roommate_status character varying NOT NULL DEFAULT 'p';
+
+ALTER TABLE IF EXISTS public.leave
+    ADD COLUMN place character varying;
+
+ALTER TABLE IF EXISTS public.leave
+    ADD CONSTRAINT fk_hosteller_approval FOREIGN KEY (roommate_id)
+    REFERENCES public.hosteller (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    NOT VALID;
 
 -- Functions
 

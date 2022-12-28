@@ -1,7 +1,7 @@
 const { createRoomDb, deleteRoomDb } = require("../db/room.db");
 const { ErrorHandler } = require("../middleware/error");
 
-class Room {
+class RoomService {
     async createRoom(room_number, warden_id, next) {
         try {
             room_number = Number(room_number);
@@ -35,4 +35,4 @@ class Room {
 
 
 
-module.exports = { roomService: new Room() };
+module.exports = { roomService: new RoomService() };

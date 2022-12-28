@@ -30,9 +30,16 @@ const getWardenIdByName = async (wardenId) => {
     return rows[0].id;
 }
 
+const getWardenIdByHostellerId = async (hosteller_id) => {
+    const { rows } = await pool.query("SELECT warden_id from public.hosteller WHERE id=$1", [hosteller_id]);
+    return rows[0].warden_id;
+}
+
 module.exports = {
     getWardenByMailDb,
     getWardenByContactNoDb,
     createWardenDb,
     getWardenIdByName,
+
+    getWardenIdByHostellerId,
 }
