@@ -1,4 +1,4 @@
-const { createAccountHosteller, loginHosteller, logoutHosteller, createBundleAccountHosteller } = require("../controller/hosteller.controller");
+const { createAccountHosteller, loginHosteller, logoutHosteller, } = require("../controller/hosteller.controller");
 
 const router = require("express").Router();
 
