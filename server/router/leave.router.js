@@ -1,4 +1,4 @@
-const { requestLeave, getAllRequestsForHosteller, deleteLeaveRequest, updateLeaveRequest, getLeaveRequestById } = require("../controller/leave.controller");
+const { requestLeave, getAllRequestsForHosteller, deleteLeaveRequest, updateLeaveRequest, getLeaveRequestById, updateRoommateStatus, getRoommateLeaveRequests, getRoommateLeaveRequestById } = require("../controller/leave.controller");
 const { verifyToken } = require("../middleware/verifyToken");
 const { verifyHosteller } = require("../middleware/verifyUser");
 
@@ -13,5 +13,13 @@ router.route("/:id")
     .get(verifyToken, verifyHosteller, getLeaveRequestById)
     .delete(verifyToken, verifyHosteller, deleteLeaveRequest);
 
+
+// for roomate
+router.route("/roommate")
+    .get(verifyToken, verifyHosteller, getRoommateLeaveRequests);
+
+router.route("/roommate/:id")
+    .get(verifyToken, verifyHosteller, getRoommateLeaveRequestById)
+    .put(verifyToken, verifyHosteller, updateRoommateStatus);
 
 module.exports = router;

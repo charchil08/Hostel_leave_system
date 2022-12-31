@@ -63,4 +63,56 @@ const deleteLeaveRequest = async (req, res, next) => {
     })
 }
 
-module.exports = { requestLeave, getAllRequestsForHosteller, getLeaveRequestById, updateLeaveRequest, deleteLeaveRequest };
+
+// For roommate
+const getRoommateLeaveRequests = async (req, res, next) => {
+    const leaves = await leaveService.getRoommateLeaveRequests(req.user.id, next);
+    if (!leaves) {
+        return;
+    }
+    return res.status(200).json({
+        status: "sucess",
+        length: leaves.length,
+        leaves
+    })
+}
+
+const getRoommateLeaveRequestById = async (req, res, next) => {
+    const leave = await leaveService.getRoommateLeaveRequestById(req.params.id, req.user.id, next);
+    if (!leave) {
+        return;
+    }
+    return res.status(200).json({
+        status: "success",
+        leave,
+    });
+}
+
+const updateRoommateStatus = async (req, res, next) => {
+    const info = {
+        id: req.params.id,
+        hosteller_id: req.user.id,
+        roommate_status: req.body.roommate_status,
+    }
+    const updatedLeave = await leaveService.updateRoommateStatus(info, next);
+    if (!updatedLeave) {
+        return;
+    }
+    return res.status(200).json({
+        status: "success",
+        leave: updatedLeave,
+    })
+}
+
+module.exports = {
+    requestLeave,
+    getAllRequestsForHosteller,
+    getLeaveRequestById,
+    updateLeaveRequest,
+    deleteLeaveRequest,
+
+    //for roommate
+    getRoommateLeaveRequests,
+    getRoommateLeaveRequestById,
+    updateRoommateStatus,
+};

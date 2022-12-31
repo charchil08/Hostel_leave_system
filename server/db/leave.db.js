@@ -62,5 +62,6 @@ module.exports = {
     deleteLeaveRequestDb,
 
     // for roommate
+    getAllLeaveRequestsForRoommateDb,
     updateRoommateStatusDb,
 }

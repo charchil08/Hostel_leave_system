@@ -1,4 +1,4 @@
-const { createLeaveDb, getAllLeaveRequestsForHostellerDb, getLeaveReuestByIdDb, updateLeaveRequestDb, deleteLeaveRequestDb } = require("../db/leave.db");
+const { createLeaveDb, getAllLeaveRequestsForHostellerDb, getLeaveReuestByIdDb, updateLeaveRequestDb, deleteLeaveRequestDb, updateRoommateStatusDb, getAllLeaveRequestsForRoommateDb } = require("../db/leave.db");
 const { getWardenIdByHostellerId } = require("../db/warden.db");
 const { ErrorHandler } = require("../middleware/error");
 
@@ -77,6 +77,50 @@ class LeaveService {
         }
     }
 
+    // for roommate
+    // 1. get all
+    async getRoommateLeaveRequests(roomate_id, next) {
+        try {
+            const roommateLeaves = await getAllLeaveRequestsForRoommateDb(roomate_id);
+            return roommateLeaves;
+        } catch (error) {
+            return next(error.statusCode, error.message);
+        }
+    }
+
+    //2. by id 
+    async getRoommateLeaveRequestById(id, hosteller_id, next) {
+        try {
+            const leave = await getLeaveReuestByIdDb(id);
+            if (!leave || leave.roommate_id !== hosteller_id) {
+                return next(new ErrorHandler(401, "Access denied"));
+            }
+            return leave;
+        } catch (error) {
+            return next(error.statusCode, error.message);
+        }
+    }
+
+    // 3. update status
+    async updateRoommateStatus({ id, hosteller_id, roommate_status }, next) {
+        try {
+            const leave = await getLeaveReuestByIdDb(id);
+            if (!leave || (leave && leave.roommate_id !== hosteller_id)) {
+                return next(new ErrorHandler(401, "Access denied"))
+            }
+            if (!roommate_status) {
+                return next(new ErrorHandler(401, "Please update status : " + roommate_status))
+            }
+            if (leave.roommate_status !== 'p') {
+                return next(new ErrorHandler(401, "status already updated once"));
+            }
+            const updatedLeave = await updateRoommateStatusDb(id, roommate_status);
+            return updatedLeave;
+        }
+        catch (error) {
+            return next(error.statusCode, error.message);
+        }
+    }
 }
 
 
