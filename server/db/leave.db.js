@@ -52,6 +52,14 @@ const getAllLeaveRequestsForWardenDb = async (warden_id) => {
     return rows;
 }
 
+const updateHostellerStatusDb = async (id, status) => {
+    const { rows } = await pool.query(
+        "UPDATE leave SET status=$1 WHERE id=$2 RETURNING *",
+        [status, id]
+    );
+    return rows[0];
+}
+
 
 
 module.exports = {
@@ -64,4 +72,8 @@ module.exports = {
     // for roommate
     getAllLeaveRequestsForRoommateDb,
     updateRoommateStatusDb,
+
+    // for warden
+    getAllLeaveRequestsForWardenDb,
+    updateHostellerStatusDb,
 }

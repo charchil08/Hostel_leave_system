@@ -1,4 +1,4 @@
-const { createLeaveDb, getAllLeaveRequestsForHostellerDb, getLeaveReuestByIdDb, updateLeaveRequestDb, deleteLeaveRequestDb, updateRoommateStatusDb, getAllLeaveRequestsForRoommateDb } = require("../db/leave.db");
+const { createLeaveDb, getAllLeaveRequestsForHostellerDb, getLeaveReuestByIdDb, updateLeaveRequestDb, deleteLeaveRequestDb, updateRoommateStatusDb, getAllLeaveRequestsForRoommateDb, getAllLeaveRequestsForWardenDb, updateHostellerStatusDb } = require("../db/leave.db");
 const { getWardenIdByHostellerId } = require("../db/warden.db");
 const { ErrorHandler } = require("../middleware/error");
 
@@ -111,7 +111,7 @@ class LeaveService {
             if (!roommate_status) {
                 return next(new ErrorHandler(401, "Please update status : " + roommate_status))
             }
-            if (leave.roommate_status !== 'p') {
+            if (leave.roommate_status !== 'p' || leave.status !== 'p') {
                 return next(new ErrorHandler(401, "status already updated once"));
             }
             const updatedLeave = await updateRoommateStatusDb(id, roommate_status);
@@ -121,7 +121,53 @@ class LeaveService {
             return next(error.statusCode, error.message);
         }
     }
+
+    //for warden
+    // 1. get all
+    async getWardenLeaveRequests(warden_id, next) {
+        try {
+            const hostellerLeaves = await getAllLeaveRequestsForWardenDb(warden_id);
+            return hostellerLeaves;
+        } catch (error) {
+            return next(error.statusCode, error.message);
+        }
+    }
+
+    //2. by id 
+    async getWardenLeaveRequestById(id, warden_id, next) {
+        try {
+            const leave = await getLeaveReuestByIdDb(id);
+            if (!leave || leave.warden_id !== warden_id) {
+                return next(new ErrorHandler(401, "Access denied"));
+            }
+            return leave;
+        } catch (error) {
+            return next(error.statusCode, error.message);
+        }
+    }
+
+    // 3. update
+    async updateRoommateStatus({ id, warden_id, status }, next) {
+        try {
+            const leave = await getLeaveReuestByIdDb(id);
+            if (!leave || leave.warden_id !== warden_id) {
+                return next(new ErrorHandler(401, "Access denied"));
+            }
+            if (status === 'p') {
+                return next(new ErrorHandler(401, "please provide accept(a) or reject(r)"));
+            }
+            if (leave.roommate_status !== 'a') {
+                return next(new ErrorHandler(401, "Roommate has not accepted status yet."));
+            }
+            const updatedLeave = await updateHostellerStatusDb(id, status);
+            return updatedLeave;
+
+        } catch (error) {
+            return next(error.statusCode, error.message);
+        }
+    }
 }
+
 
 
 module.exports = {
