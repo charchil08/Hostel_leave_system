@@ -147,7 +147,7 @@ class LeaveService {
     }
 
     // 3. update
-    async updateRoommateStatus({ id, warden_id, status }, next) {
+    async updateHostellerStatus({ id, warden_id, status, remarks }, next) {
         try {
             const leave = await getLeaveReuestByIdDb(id);
             if (!leave || leave.warden_id !== warden_id) {
@@ -159,7 +159,7 @@ class LeaveService {
             if (leave.roommate_status !== 'a') {
                 return next(new ErrorHandler(401, "Roommate has not accepted status yet."));
             }
-            const updatedLeave = await updateHostellerStatusDb(id, status);
+            const updatedLeave = await updateHostellerStatusDb(id, status, remarks);
             return updatedLeave;
 
         } catch (error) {

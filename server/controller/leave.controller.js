@@ -104,6 +104,46 @@ const updateRoommateStatus = async (req, res, next) => {
     })
 }
 
+// For warden
+const getWardenLeaveRequests = async (req, res, next) => {
+    const leaves = await leaveService.getWardenLeaveRequests(req.user.id, next);
+    if (!leaves) {
+        return;
+    }
+    return res.status(200).json({
+        status: "success",
+        length: leaves.length,
+        leaves
+    })
+}
+
+const getWardenLeaveRequestById = async (req, res, next) => {
+    const leave = await leaveService.getWardenLeaveRequestById(req.params.id, req.user.id, next);
+    if (!leave) return;
+    return res.status(200).json({
+        status: "success",
+        leave,
+    });
+}
+
+const updateHostellerStatus = async (req, res, next) => {
+    const info = {
+        id: req.params.id,
+        warden_id: req.user.id,
+        status: req.body.status,
+        remarks: req.body.remarks || "",
+    }
+    const updatedLeave = await leaveService.updateHostellerStatus(info, next);
+    if (!updatedLeave) {
+        return;
+    }
+    return res.status(200).json({
+        status: "success",
+        leave: updatedLeave,
+    })
+}
+
+
 module.exports = {
     requestLeave,
     getAllRequestsForHosteller,
@@ -115,4 +155,9 @@ module.exports = {
     getRoommateLeaveRequests,
     getRoommateLeaveRequestById,
     updateRoommateStatus,
+
+    // for warden
+    getWardenLeaveRequests,
+    getWardenLeaveRequestById,
+    updateHostellerStatus,
 };

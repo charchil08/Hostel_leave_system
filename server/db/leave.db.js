@@ -45,17 +45,16 @@ const updateRoommateStatusDb = async (id, roommate_status) => {
 
 
 
-
 // Authorize for warden
 const getAllLeaveRequestsForWardenDb = async (warden_id) => {
     const { rows } = await pool.query("SELECT * FROM public.leave WHERE warden_id=$1", [warden_id]);
     return rows;
 }
 
-const updateHostellerStatusDb = async (id, status) => {
+const updateHostellerStatusDb = async (id, status, remarks) => {
     const { rows } = await pool.query(
-        "UPDATE leave SET status=$1 WHERE id=$2 RETURNING *",
-        [status, id]
+        "UPDATE leave SET status=$1, remarks=$2,updated_at=CURRENT_DATE, remarks_date=CURRENT_DATE WHERE id=$3 RETURNING *",
+        [status, remarks, id]
     );
     return rows[0];
 }
